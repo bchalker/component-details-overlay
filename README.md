@@ -26,7 +26,7 @@ No badge on something? It is untagged, so say that: "the banner on /customers is
 
 The toggle card has a collapsed Accessibility section with text size, high contrast badges and screen reader announcements.
 
-<img src="docs/images/accessibility-panel.png" alt="The Accessibility section of the Component details card" width="288">
+<img src="docs/images/accessibility-card.png" alt="The Accessibility section of the Component details card" width="288">
 
 More in the [reference](docs/reference.md#accessibility).
 
