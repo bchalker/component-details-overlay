@@ -1,0 +1,400 @@
+// Every value reads a --cdo-* custom property with a default as its fallback. Set any of
+// them on :root (or a wrapper) to theme the overlay. The --_cdo-* names are internal.
+
+@use 'sass:map';
+
+$defaults: (
+  'color-1': #2563eb,
+  'color-2': #db2777,
+  'color-3': #d97706,
+  'color-4': #16a34a,
+  'color-5': #7c3aed,
+  'z-index': 2147483000,
+  'outline-width': 1px,
+  'outline-style': dashed,
+  'outline-hover-width': 2px,
+  'badge-text-color': #fff,
+  'badge-font-family': ('Lato', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif),
+  'badge-font-size': 11px,
+  'badge-font-weight': 700,
+  'badge-height': 18px,
+  'badge-padding-x': 4px,
+  'badge-radius': 0 0 3px 0,
+  'badge-opacity': 1,
+  'badge-offset-x': 0px,
+  'badge-offset-y': 0px,
+  'badge-shadow': 0 1px 4px rgba(0, 0, 0, 0.4),
+  'toggle-bg': #1f2937,
+  'toggle-bg-hover': #374151,
+  'toggle-text': #e5e7eb,
+  'toggle-accent': #60a5fa,
+  'toggle-track-off': rgba(255, 255, 255, 0.25),
+  'toggle-thumb-off': #fff,
+  'toggle-thumb-on': #1f2937,
+  'toggle-font-family': ('Lato', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif),
+  'toggle-font-size': 14px,
+  'toggle-radius': 999px,
+  'toggle-padding': 8px 12px,
+  'toggle-offset': 16px,
+  'toggle-z-index': 2147483001,
+);
+
+@function v($name) {
+  @return var(--cdo-#{$name}, #{map.get($defaults, $name)});
+}
+
+// Layer
+
+.cdo-layer {
+  // Resolved copies the script reads to estimate badge sizes.
+  --_cdo-badge-height: #{v('badge-height')};
+  --_cdo-badge-font-size: #{v('badge-font-size')};
+  --_cdo-badge-padding-x: #{v('badge-padding-x')};
+  --_cdo-badge-opacity: #{v('badge-opacity')};
+
+  position: fixed;
+  inset: 0;
+  z-index: v('z-index');
+  pointer-events: none;
+  overflow: hidden;
+  contain: strict;
+}
+
+.cdo-box {
+  --_cdo-color: #{v('color-1')};
+
+  position: absolute;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
+  outline: v('outline-width') v('outline-style') var(--_cdo-color);
+  outline-offset: calc(-1 * #{v('outline-width')});
+  pointer-events: none;
+}
+
+@for $i from 1 through 5 {
+  .cdo-depth-#{$i} {
+    --_cdo-color: #{v('color-#{$i}')};
+  }
+}
+
+.cdo-box--hovered {
+  z-index: 1;
+  outline-style: solid;
+  outline-width: v('outline-hover-width');
+  outline-offset: calc(-1 * #{v('outline-hover-width')});
+}
+
+.cdo-badge {
+  position: absolute;
+  left: v('badge-offset-x');
+  margin-top: v('badge-offset-y');
+  box-sizing: border-box;
+  height: calc(#{v('badge-height')} * var(--_cdo-scale, 1));
+  padding: 0 calc(#{v('badge-padding-x')} * var(--_cdo-scale, 1));
+  font-family: v('badge-font-family');
+  font-size: calc(#{v('badge-font-size')} * var(--_cdo-scale, 1));
+  font-weight: v('badge-font-weight');
+  line-height: calc(#{v('badge-height')} * var(--_cdo-scale, 1));
+  letter-spacing: 0.01em;
+  color: var(--_cdo-text, #{v('badge-text-color')});
+  background: var(--_cdo-color);
+  border-radius: v('badge-radius');
+  white-space: nowrap;
+  opacity: v('badge-opacity');
+  pointer-events: none;
+  user-select: none;
+}
+
+.cdo-box--hovered > .cdo-badge {
+  opacity: 1;
+  box-shadow: v('badge-shadow');
+}
+
+.cdo-layer--hover-only .cdo-badge {
+  display: none;
+}
+
+.cdo-layer--hover-only .cdo-box--hovered > .cdo-badge {
+  display: block;
+}
+
+// High contrast: solid black badges with a white edge, thicker solid outlines.
+.cdo-layer--contrast {
+  .cdo-box {
+    outline-style: solid;
+    outline-width: 2px;
+    outline-offset: -2px;
+  }
+
+  .cdo-badge {
+    color: #fff;
+    background: #000;
+    opacity: 1;
+    box-shadow: inset 0 0 0 1px #fff;
+  }
+}
+
+// Text for screen readers only.
+.cdo-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+// Toggle
+
+.cdo-toggle {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 4px;
+  font-family: v('toggle-font-family');
+  font-size: calc(#{v('toggle-font-size')} * var(--_cdo-scale, 1));
+  color: v('toggle-text');
+}
+
+.cdo-toggle--fixed {
+  position: fixed;
+  z-index: v('toggle-z-index');
+  padding: 6px;
+  background: v('toggle-bg');
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+}
+
+.cdo-toggle--top-left { top: v('toggle-offset'); left: v('toggle-offset'); }
+.cdo-toggle--top-right { top: v('toggle-offset'); right: v('toggle-offset'); }
+.cdo-toggle--bottom-left { bottom: v('toggle-offset'); left: v('toggle-offset'); }
+.cdo-toggle--bottom-right { bottom: v('toggle-offset'); right: v('toggle-offset'); }
+
+.cdo-toggle__switch {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: v('toggle-padding');
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  background: v('toggle-bg');
+  border: 0;
+  border-radius: v('toggle-radius');
+  cursor: pointer;
+  transition: background 140ms ease;
+
+  &:hover {
+    background: v('toggle-bg-hover');
+  }
+
+  &:focus-visible {
+    outline: 2px solid v('toggle-accent');
+    outline-offset: 2px;
+  }
+}
+
+.cdo-toggle__label {
+  flex: 1 0 auto;
+}
+
+.cdo-toggle__track {
+  position: relative;
+  flex-shrink: 0;
+  width: calc(34px * var(--_cdo-scale, 1));
+  height: calc(18px * var(--_cdo-scale, 1));
+  background: v('toggle-track-off');
+  border-radius: calc(9px * var(--_cdo-scale, 1));
+  transition: background 140ms ease;
+}
+
+.cdo-toggle__thumb {
+  position: absolute;
+  top: calc(2px * var(--_cdo-scale, 1));
+  left: calc(2px * var(--_cdo-scale, 1));
+  width: calc(14px * var(--_cdo-scale, 1));
+  height: calc(14px * var(--_cdo-scale, 1));
+  background: v('toggle-thumb-off');
+  border-radius: 50%;
+  transition: left 140ms ease, background 140ms ease;
+}
+
+.cdo-toggle--on {
+  .cdo-toggle__switch {
+    color: v('toggle-accent');
+  }
+
+  .cdo-toggle__track {
+    background: v('toggle-accent');
+  }
+
+  .cdo-toggle__thumb {
+    left: calc(18px * var(--_cdo-scale, 1));
+    background: v('toggle-thumb-on');
+  }
+}
+
+.cdo-toggle__desc {
+  margin: 0;
+  max-width: 36ch;
+  padding: 0 12px 6px;
+  font-size: 0.86em;
+  line-height: 1.45;
+  opacity: 0.75;
+}
+
+.cdo-toggle__option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 2px 12px 4px;
+  font-size: 0.86em;
+  cursor: pointer;
+
+  input {
+    margin: 0;
+    accent-color: v('toggle-accent');
+  }
+}
+
+// Accessibility section
+
+.cdo-a11y {
+  margin: 2px 0 0;
+  padding: 0 12px 6px;
+  font-size: 0.86em;
+}
+
+.cdo-a11y__summary {
+  display: flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 2px 0;
+  gap: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  user-select: none;
+  list-style: none;
+
+  &::-webkit-details-marker {
+    display: none;
+  }
+
+  // A chevron that turns when the section opens.
+  &::before {
+    content: '';
+    flex-shrink: 0;
+    width: 0.5em;
+    height: 0.5em;
+    margin: 0 0.15em 0 0.1em;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: rotate(-45deg);
+    transition: transform 140ms ease;
+  }
+
+  &:focus-visible {
+    outline: 2px solid v('toggle-accent');
+    outline-offset: 2px;
+  }
+}
+
+.cdo-a11y[open] > .cdo-a11y__summary::before {
+  transform: rotate(45deg);
+}
+
+.cdo-a11y__body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-width: 36ch;
+  padding-top: 6px;
+}
+
+.cdo-a11y__group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 14px;
+  margin: 0 0 4px;
+  padding: 0;
+  border: 0;
+
+  legend {
+    width: 100%;
+    padding: 0 0 2px;
+    font-weight: 700;
+  }
+}
+
+.cdo-a11y__choice,
+.cdo-a11y__row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 24px;
+  cursor: pointer;
+
+  input {
+    margin: 0;
+    accent-color: v('toggle-accent');
+
+    &:focus-visible {
+      outline: 2px solid v('toggle-accent');
+      outline-offset: 2px;
+    }
+  }
+}
+
+.cdo-a11y__hint {
+  margin: 0 0 0 24px;
+  line-height: 1.45;
+  opacity: 0.75;
+}
+
+.cdo-toggle--contrast {
+  .cdo-toggle__desc,
+  .cdo-a11y__hint {
+    opacity: 1;
+  }
+
+  .cdo-toggle__track {
+    box-shadow: inset 0 0 0 1px currentColor;
+  }
+}
+
+// Windows High Contrast and other forced-colour modes replace colours with system ones.
+// Borders keep the badges, the outline and the switch visible.
+@media (forced-colors: active) {
+  .cdo-badge {
+    border: 1px solid CanvasText;
+  }
+
+  .cdo-box {
+    outline-color: Highlight;
+  }
+
+  .cdo-toggle--fixed,
+  .cdo-toggle__switch {
+    border: 1px solid CanvasText;
+  }
+
+  .cdo-toggle__track {
+    border: 1px solid ButtonText;
+  }
+
+  .cdo-toggle__thumb {
+    background: ButtonText;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cdo-toggle__switch,
+  .cdo-toggle__track,
+  .cdo-toggle__thumb,
+  .cdo-a11y__summary::before {
+    transition: none;
+  }
+}

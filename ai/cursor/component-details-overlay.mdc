@@ -1,0 +1,21 @@
+---
+description: Tag React components for component-details-overlay so each shows its name on the live page
+globs: "**/*.tsx"
+alwaysApply: false
+---
+
+This project uses `component-details-overlay`. When you create a React component, add `{...tag('ComponentName')}` to its outermost DOM element.
+
+```tsx
+import { tag } from 'component-details-overlay';
+
+export function Card({ children }) {
+  return <section {...tag('Card')} className="card">{children}</section>;
+}
+```
+
+- The name matches the component's own name, in PascalCase.
+- Put the tag before any `...rest` spread so callers can still override it.
+- In a Next.js Server Component, import `tag` from `component-details-overlay/tag`.
+- A component that only renders another tagged component and adds no element of its own doesn't need a tag.
+- To set the overlay up in a project that doesn't have it yet, read `node_modules/component-details-overlay/AI-SETUP.md`.

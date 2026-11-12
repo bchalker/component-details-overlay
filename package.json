@@ -1,0 +1,83 @@
+{
+  "name": "component-details-overlay",
+  "version": "0.1.0",
+  "description": "A dev-only React overlay that shows each tagged component's name on the live page.",
+  "license": "MIT",
+  "author": "Bryan Chalker",
+  "homepage": "https://github.com/bchalker/component-details-overlay#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bchalker/component-details-overlay.git"
+  },
+  "bugs": {
+    "url": "https://github.com/bchalker/component-details-overlay/issues"
+  },
+  "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./tag": {
+      "types": "./dist/tag.d.ts",
+      "import": "./dist/tag.js",
+      "require": "./dist/tag.cjs"
+    },
+    "./styles.css": "./dist/styles.css"
+  },
+  "files": [
+    "dist",
+    "AI-SETUP.md",
+    "ai"
+  ],
+  "keywords": [
+    "react",
+    "overlay",
+    "design-system",
+    "devtools",
+    "audit",
+    "claude-code",
+    "cursor",
+    "ai-coding"
+  ],
+  "scripts": {
+    "build": "vite build && tsc -p tsconfig.build.json",
+    "prepare": "npm run build",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "demo": "vite --config examples/demo/vite.config.ts",
+    "demo:build": "vite build --config examples/demo/vite.config.ts",
+    "demo:preview": "vite preview --config examples/demo/vite.config.ts"
+  },
+  "peerDependencies": {
+    "react": ">=17",
+    "react-dom": ">=17"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@testing-library/react": "^16.3.3",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.3.0",
+    "eslint": "^10.14.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.14.0",
+    "jsdom": "^31.0.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "sass": "^1.108.2",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.72.2",
+    "vite": "^8.3.8",
+    "vitest": "^5.1.0"
+  }
+}
